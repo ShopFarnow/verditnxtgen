@@ -2,16 +2,11 @@
   "name": "verditnxtgen",
   "version": "1.0.0",
   "description": "AI-powered company verification for Indian job seekers",
-  "main": "index.js",
   "scripts": {
     "crawl": "node scripts/crawl.js",
     "score": "node scripts/score.js",
     "embeddings": "node scripts/sync-embeddings.js",
-    "generate": "node scripts/generate-pages.js",
-    "refresh": "npm run crawl && npm run score && npm run embeddings && npm run generate"
-  },
-  "dependencies": {
-    "node-fetch": "^2.7.0"
+    "generate": "node scripts/generate-pages.js"
   },
   "engines": {
     "node": ">=20.0.0"
