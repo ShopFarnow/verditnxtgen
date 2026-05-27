@@ -110,9 +110,26 @@ async function crawlCompany(company) {
 
 // ── Process queued companies (user-submitted unknowns) ────
 function processQueue(companies) {
-  if (!fs.existsSync(QUEUE_FILE)) return companies;
+  // Safely read queue.json
+  let queue = [];
+  if (fs.existsSync(QUEUE_FILE)) {
+    try {
+      const raw = fs.readFileSync(QUEUE_FILE, 'utf8');
+      if (raw.trim()) {
+        queue = JSON.parse(raw);
+      } else {
+        console.warn('  ⚠️ queue.json is empty, starting fresh');
+        queue = [];
+      }
+    } catch (err) {
+      console.error(`  ❌ Failed to parse queue.json: ${err.message}`);
+      queue = [];
+    }
+  } else {
+    console.warn('  ⚠️ queue.json not found, creating empty array');
+    queue = [];
+  }
 
-  const queue = JSON.parse(fs.readFileSync(QUEUE_FILE, 'utf8'));
   const pending = queue.filter(item => item.status === 'pending');
 
   if (pending.length === 0) {
@@ -165,7 +182,25 @@ function processQueue(companies) {
 
 // ── Main ──────────────────────────────────────────────────
 async function main() {
-  let companies = JSON.parse(fs.readFileSync(COMPANIES_FILE, 'utf8'));
+  // Safely read companies.json
+  let companies = [];
+  if (fs.existsSync(COMPANIES_FILE)) {
+    try {
+      const raw = fs.readFileSync(COMPANIES_FILE, 'utf8');
+      if (raw.trim()) {
+        companies = JSON.parse(raw);
+      } else {
+        console.warn('⚠️ companies.json is empty, starting fresh');
+        companies = [];
+      }
+    } catch (err) {
+      console.error(`❌ Failed to parse companies.json: ${err.message}`);
+      companies = [];
+    }
+  } else {
+    console.warn('⚠️ companies.json not found, creating empty array');
+    companies = [];
+  }
 
   // Step 1: Process any user-submitted companies from queue
   console.log('\n📬 Processing queue...');
