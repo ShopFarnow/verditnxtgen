@@ -1,54 +1,61 @@
-
 [
   {
     "name": "Infosys Limited",
+    "cin": null,
     "slug": "infosys-limited",
-    "score": 94,
-    "verdict": "verified",
-    "flags": [],
+    "score": 35,
+    "verdict": "fraud",
+    "flags": [
+      "Domain registered only 0 months ago",
+      "Found 3 fraud/scam news article(s)"
+    ],
     "signals": {
       "mca": "Active",
-      "domain_age_years": 26,
+      "domain_age_years": 0,
       "review_count": 45000,
       "linkedin_employees": 340000,
       "gst": "Active",
-      "news_fraud_mentions": 0
+      "news_fraud_mentions": 3
     },
     "updated": "2026-05-27"
   },
   {
     "name": "TCS Tata Consultancy Services",
+    "cin": null,
     "slug": "tcs-tata-consultancy-services",
-    "score": 97,
-    "verdict": "verified",
-    "flags": [],
+    "score": 35,
+    "verdict": "fraud",
+    "flags": [
+      "Domain registered only 0 months ago",
+      "Found 1 fraud/scam news article(s)"
+    ],
     "signals": {
       "mca": "Active",
-      "domain_age_years": 24,
+      "domain_age_years": 0,
       "review_count": 60000,
       "linkedin_employees": 600000,
       "gst": "Active",
-      "news_fraud_mentions": 0
+      "news_fraud_mentions": 1
     },
     "updated": "2026-05-27"
   },
   {
     "name": "TechNova Solutions Pvt Ltd",
+    "cin": null,
     "slug": "technova-solutions-pvt-ltd",
-    "score": 18,
+    "score": 0,
     "verdict": "fraud",
     "flags": [
-      "Not found in MCA21 company registry",
-      "Domain registered only 2 months ago",
-      "No employees found on LinkedIn"
+      "Domain registered only 0 months ago",
+      "No employees found on LinkedIn — possible ghost company"
     ],
     "signals": {
       "mca": "Not found",
-      "domain_age_years": 0.2,
+      "domain_age_years": 0,
       "review_count": 0,
       "linkedin_employees": 0,
       "gst": "Not found",
-      "news_fraud_mentions": 2
+      "news_fraud_mentions": 0
     },
     "updated": "2026-05-27"
   }
