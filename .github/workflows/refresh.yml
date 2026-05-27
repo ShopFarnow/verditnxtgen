@@ -2,8 +2,8 @@ name: Nightly Company Database Refresh
 
 on:
   schedule:
-    - cron: '0 0 * * *'  # Runs daily at midnight UTC
-  workflow_dispatch:      # Allows manual trigger
+    - cron: '0 0 * * *'
+  workflow_dispatch:
 
 jobs:
   update-database:
@@ -18,46 +18,56 @@ jobs:
         with:
           node-version: '20'
 
-      # 🔥 CRITICAL FIX: Ensure JSON files are never empty
-      - name: Validate and prepare JSON files
+      # 🔥 Fix 1: Ensure JSON files are non‑empty and valid
+      - name: Validate and repair JSON files
         run: |
-          # Check companies.json – if empty or missing, write []
-          if [ ! -s data/companies.json ]; then
-            echo "[]" > data/companies.json
-            echo "⚠️ companies.json was empty or missing – initialized with []"
-          fi
+          # Install jq for JSON validation (optional but recommended)
+          sudo apt-get update && sudo apt-get install -y jq
 
-          # Check queue.json – if empty or missing, write []
-          if [ ! -s data/queue.json ]; then
-            echo "[]" > data/queue.json
-            echo "⚠️ queue.json was empty or missing – initialized with []"
-          fi
+          # Function to reset a JSON file to []
+          reset_json() {
+            echo "[]" > "$1"
+            echo "⚠️ Reset $1 to []"
+          }
 
-          # Optional: validate JSON syntax
-          for file in data/companies.json data/queue.json; do
-            if ! jq empty "$file" 2>/dev/null; then
-              echo "❌ Invalid JSON in $file – resetting to []"
-              echo "[]" > "$file"
+          # Process companies.json
+          if [ ! -f data/companies.json ]; then
+            reset_json data/companies.json
+          else
+            if ! jq empty data/companies.json 2>/dev/null; then
+              echo "❌ Invalid JSON in companies.json – resetting"
+              reset_json data/companies.json
+            elif [ ! -s data/companies.json ]; then
+              echo "⚠️ companies.json is empty – resetting"
+              reset_json data/companies.json
             fi
-          done
+          fi
 
-      - name: Install dependencies (if any)
-        run: npm ci || true  # Skip if no package.json
+          # Process queue.json
+          if [ ! -f data/queue.json ]; then
+            reset_json data/queue.json
+          else
+            if ! jq empty data/queue.json 2>/dev/null; then
+              echo "❌ Invalid JSON in queue.json – resetting"
+              reset_json data/queue.json
+            elif [ ! -s data/queue.json ]; then
+              echo "⚠️ queue.json is empty – resetting"
+              reset_json data/queue.json
+            fi
+          fi
 
-      # Run scoring script – now safe even if files were empty
+      # 🔥 Fix 2: Skip npm ci if no package.json – just run scripts directly
       - name: Run score.js
         env:
           NEWS_API_KEY: ${{ secrets.NEWS_API_KEY }}
         run: node scripts/score.js
 
-      # Run crawl script (processes new queue entries)
       - name: Run crawl.js
         env:
           NEWS_API_KEY: ${{ secrets.NEWS_API_KEY }}
         run: node scripts/crawl.js
 
-      # Commit and push any changes back to the repo
-      - name: Commit updated data
+      - name: Commit and push updates
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
