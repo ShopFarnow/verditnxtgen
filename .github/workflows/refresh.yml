@@ -1,19 +1,12 @@
 name: Nightly Company Database Refresh
 
-# ─────────────────────────────────────────────────────────────
-#  Runs every night at 00:00 IST (18:30 UTC) WITHOUT any
-#  manual intervention. Crawls sources, recalculates trust
-#  scores, generates SEO pages, updates sitemap, and
-#  commits everything back to GitHub Pages.
-# ─────────────────────────────────────────────────────────────
-
 on:
   schedule:
-    - cron: '30 18 * * *'   # 00:00 IST every day
-  workflow_dispatch:          # Also allow manual trigger
+    - cron: '30 18 * * *'
+  workflow_dispatch:
 
 permissions:
-  contents: write             # So it can git commit + push
+  contents: write
 
 jobs:
 
@@ -29,50 +22,38 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'npm'
 
       - name: Install dependencies
-        run: npm ci
+        run: npm install
 
-      # ── STEP 1: Crawl all data sources ──────────────────────
-      - name: Crawl MCA21 + WHOIS + News + Glassdoor
+      - name: Crawl MCA21 + WHOIS + News
         env:
           NEWS_API_KEY:     ${{ secrets.NEWS_API_KEY }}
           OPENAI_API_KEY:   ${{ secrets.OPENAI_API_KEY }}
           PINECONE_API_KEY: ${{ secrets.PINECONE_API_KEY }}
+          PINECONE_HOST:    ${{ secrets.PINECONE_HOST }}
         run: node scripts/crawl.js
-        # Output: data/raw/*.json for each company
 
-      # ── STEP 2: Score every company ─────────────────────────
       - name: Calculate trust scores
         run: node scripts/score.js
-        # Output: data/companies.json (scored + verdicted)
 
-      # ── STEP 3: Update RAG vector store ─────────────────────
       - name: Sync embeddings to Pinecone
         env:
           OPENAI_API_KEY:   ${{ secrets.OPENAI_API_KEY }}
           PINECONE_API_KEY: ${{ secrets.PINECONE_API_KEY }}
+          PINECONE_HOST:    ${{ secrets.PINECONE_HOST }}
         run: node scripts/sync-embeddings.js
-        # Upserts only changed records — efficient
 
-      # ── STEP 4: Generate per-company SEO pages ──────────────
       - name: Generate SEO HTML pages
         run: node scripts/generate-pages.js
-        # Output: company/[slug].html for every record
 
-      # ── STEP 5: Rebuild sitemap.xml ─────────────────────────
-      - name: Rebuild sitemap + robots.txt
-        run: node scripts/sitemap.js
-        # Adds new company pages, updates lastmod dates
-
-      # ── STEP 6: Commit and push to GitHub Pages ─────────────
       - name: Commit updated data and pages
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "chore: nightly refresh $(date +'%Y-%m-%d')"
+          commit_message: "chore: nightly refresh ${{ github.run_number }}"
           file_pattern: |
             data/companies.json
+            data/raw/*.json
             company/*.html
             sitemap.xml
             robots.txt
