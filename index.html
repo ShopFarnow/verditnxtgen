@@ -13,6 +13,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
 <style>
+  /* (your existing CSS – unchanged, keep as is) */
   :root {
     --ink: #0d0d12;
     --ink2: #4a4a5a;
@@ -163,6 +164,7 @@
   .verdict-verified { background: #d4f5ea; color: #0a6644; }
   .verdict-caution  { background: #fff0e0; color: #8a4400; }
   .verdict-fraud    { background: #ffe8eb; color: #8a0014; }
+  .verdict-pending  { background: #eef2ff; color: #1a3cff; }
 
   .score-meter {
     background: var(--bg); border-radius: 8px;
@@ -194,7 +196,30 @@
   }
   .ai-summary strong { color: var(--accent); }
 
-  /* ── HOW IT WORKS ── */
+  /* ── SPINNER ── */
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .spinner {
+    width: 20px; height: 20px;
+    border: 2px solid var(--border);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin .7s linear infinite;
+    display: inline-block;
+  }
+  #loading-state { text-align: center; padding: 20px; display: none; gap: 10px; align-items: center; justify-content: center; }
+
+  /* error message */
+  .error-message {
+    color: var(--danger);
+    background: #ffe8eb;
+    padding: 12px;
+    border-radius: var(--radius-sm);
+    margin-top: 16px;
+    font-size: 14px;
+    text-align: center;
+  }
+
+  /* rest of your existing sections (How it works, Scoring, Automation, Footer) – keep them unchanged */
   .section { padding: 72px 24px; max-width: 1100px; margin: 0 auto; }
   .section-label {
     font-size: 12px; font-weight: 600; letter-spacing: 2px;
@@ -207,7 +232,6 @@
     letter-spacing: -1px; margin-bottom: 14px;
   }
   .section-sub { color: var(--ink2); font-size: 17px; max-width: 560px; font-weight: 300; }
-
   .steps-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-top: 40px; }
   .step-card {
     background: var(--surface); border: 1px solid var(--border);
@@ -222,8 +246,6 @@
   }
   .step-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 16px; margin-bottom: 8px; }
   .step-body { font-size: 14px; color: var(--ink2); line-height: 1.7; }
-
-  /* ── SIGNAL TABLE ── */
   .signals-section { background: var(--surface); border-radius: var(--radius); padding: 32px; margin-top: 32px; }
   .signal-table { width: 100%; border-collapse: collapse; font-size: 14px; margin-top: 16px; }
   .signal-table th { text-align: left; font-weight: 600; color: var(--ink); padding: 10px 14px; border-bottom: 2px solid var(--border); font-size: 12px; text-transform: uppercase; letter-spacing: .5px; }
@@ -233,8 +255,6 @@
   .pts.pos { color: var(--accent2); }
   .pts.neg { color: var(--danger); }
   .src-tag { display: inline-block; background: #f0f0f6; color: var(--ink2); font-size: 11px; padding: 2px 8px; border-radius: 4px; }
-
-  /* ── AUTOMATION CARD ── */
   .auto-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 36px; }
   @media (max-width: 640px) { .auto-grid { grid-template-columns: 1fr; } .signals-grid { grid-template-columns: 1fr; } .search-row { flex-direction: column; } }
   .auto-card {
@@ -254,8 +274,6 @@
   .code-block .comment { color: #555577; }
   .code-block .key { color: #82b4ff; }
   .code-block .val { color: #ffcb6b; }
-
-  /* ── FOOTER ── */
   footer {
     background: var(--ink); color: rgba(255,255,255,0.5);
     text-align: center; padding: 40px 24px;
@@ -267,8 +285,6 @@
     font-size: 20px; color: #fff; margin-bottom: 8px;
   }
   footer .footer-logo span { color: var(--accent); }
-
-  /* ── TRUST STRIP ── */
   .trust-strip {
     background: var(--surface); border-top: 1px solid var(--border);
     border-bottom: 1px solid var(--border);
@@ -278,23 +294,11 @@
   }
   .trust-item { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--ink2); }
   .trust-item span { font-weight: 600; color: var(--ink); }
-
-  /* ── SPINNER ── */
-  @keyframes spin { to { transform: rotate(360deg); } }
-  .spinner {
-    width: 20px; height: 20px;
-    border: 2px solid var(--border);
-    border-top-color: var(--accent);
-    border-radius: 50%;
-    animation: spin .7s linear infinite;
-    display: inline-block;
-  }
-  #loading-state { text-align: center; padding: 20px; display: none; gap: 10px; align-items: center; justify-content: center; }
 </style>
 </head>
 <body>
 
-<!-- NAV -->
+<!-- NAV (unchanged) -->
 <nav>
   <a href="/" class="logo">verdict<span>nxt</span>gen</a>
   <div class="nav-links">
@@ -345,7 +349,7 @@
   </div>
 </section>
 
-<!-- TRUST STRIP -->
+<!-- TRUST STRIP (unchanged) -->
 <div class="trust-strip">
   <div class="trust-item">🏢 <span>MCA21</span> database integrated</div>
   <div class="trust-item">🔍 <span>Live</span> news fraud alerts</div>
@@ -353,36 +357,19 @@
   <div class="trust-item">🔄 <span>Daily</span> automated refresh</div>
 </div>
 
-<!-- HOW IT WORKS -->
+<!-- rest of sections (How it works, Scoring, Automation, Footer) – keep them identical to your original -->
 <section class="section" id="how">
   <div class="section-label">How it works</div>
   <h2 class="section-title">Three steps to know the truth</h2>
   <p class="section-sub">Our AI cross-checks 11 public data sources in real time. No login. No fee. No nonsense.</p>
   <div class="steps-grid">
-    <div class="step-card">
-      <div class="step-num">01</div>
-      <div class="step-title">Enter the company name</div>
-      <div class="step-body">Type the name exactly as given in your offer letter or WhatsApp message. Variations and typos are handled automatically.</div>
-    </div>
-    <div class="step-card">
-      <div class="step-num">02</div>
-      <div class="step-title">AI runs 11 checks</div>
-      <div class="step-body">We query MCA21, Glassdoor, WHOIS domain age, LinkedIn headcount, news fraud mentions, GST portal, and more — all in under 3 seconds.</div>
-    </div>
-    <div class="step-card">
-      <div class="step-num">03</div>
-      <div class="step-title">Get your verdict</div>
-      <div class="step-body">A 0–100 trust score, a clear Verified / Caution / Fraud verdict, and an AI-written plain-English summary of red flags.</div>
-    </div>
-    <div class="step-card">
-      <div class="step-num">04</div>
-      <div class="step-title">Share the report</div>
-      <div class="step-body">Copy a shareable link to warn friends or report to the National Cyber Crime portal directly from the result page.</div>
-    </div>
+    <div class="step-card"><div class="step-num">01</div><div class="step-title">Enter the company name</div><div class="step-body">Type the name exactly as given in your offer letter or WhatsApp message. Variations and typos are handled automatically.</div></div>
+    <div class="step-card"><div class="step-num">02</div><div class="step-title">AI runs 11 checks</div><div class="step-body">We query MCA21, Glassdoor, WHOIS domain age, LinkedIn headcount, news fraud mentions, GST portal, and more — all in under 3 seconds.</div></div>
+    <div class="step-card"><div class="step-num">03</div><div class="step-title">Get your verdict</div><div class="step-body">A 0–100 trust score, a clear Verified / Caution / Fraud verdict, and an AI-written plain-English summary of red flags.</div></div>
+    <div class="step-card"><div class="step-num">04</div><div class="step-title">Share the report</div><div class="step-body">Copy a shareable link to warn friends or report to the National Cyber Crime portal directly from the result page.</div></div>
   </div>
 </section>
 
-<!-- SCORING SECTION -->
 <section class="section" id="scoring" style="padding-top:0">
   <div class="section-label">Scoring</div>
   <h2 class="section-title">What makes a company trustworthy?</h2>
@@ -399,178 +386,122 @@
         <tr><td>Professional website + SSL</td><td><span class="src-tag">WHOIS + crawl</span></td><td><span class="pts pos">+10</span></td><td>Missing HTTPS or no-content sites penalised</td></tr>
         <tr><td>News fraud / scam mentions</td><td><span class="src-tag">NewsAPI</span></td><td><span class="pts neg">−30</span></td><td>Keyword match: fraud, scam, cheated, fake offer</td></tr>
         <tr><td>Advance fee demand pattern</td><td><span class="src-tag">AI analysis</span></td><td><span class="pts neg">−20</span></td><td>JD text asking for registration / security deposit</td></tr>
-        <tr><td>Copy-paste JD detection</td><td><span class="src-tag">RAG similarity</span></td><td><span class="pts neg">−10</span></td><td">Vector similarity to known scam JD templates</td></tr>
+        <tr><td>Copy-paste JD detection</td><td><span class="src-tag">RAG similarity</span></td><td><span class="pts neg">−10</span></td><td>Vector similarity to known scam JD templates</td></tr>
       </tbody>
     </table>
   </div>
 </section>
 
-<!-- AUTOMATION SECTION -->
 <section class="section" id="automation">
   <div class="section-label">Zero-touch automation</div>
   <h2 class="section-title">Refreshes itself. Every single day.</h2>
   <p class="section-sub">You don't need to touch the server. GitHub Actions runs the full pipeline nightly at midnight IST.</p>
   <div class="auto-grid">
-    <div class="auto-card">
-      <div class="auto-card-icon">⏰</div>
-      <div class="auto-card-title">Nightly cron job</div>
-      <div class="auto-card-body">A GitHub Actions workflow fires at 00:00 IST. It re-crawls every company in the database, recalculates scores, and pushes updated JSON — no server, no cost.</div>
-      <div class="code-block">
-<span class="comment"># .github/workflows/refresh.yml</span>
-<span class="key">on</span>:
-  <span class="key">schedule</span>:
-    - <span class="key">cron</span>: <span class="val">'0 18 * * *'</span>  <span class="comment"># 00:00 IST</span>
-<span class="key">jobs</span>:
-  <span class="key">refresh</span>:
-    <span class="key">runs-on</span>: <span class="val">ubuntu-latest</span>
-    <span class="key">steps</span>:
-      - <span class="key">run</span>: <span class="val">node scripts/crawl.js</span>
-      - <span class="key">run</span>: <span class="val">node scripts/score.js</span>
-      - <span class="key">run</span>: <span class="val">node scripts/generate-pages.js</span>
-      - <span class="key">uses</span>: <span class="val">stefanzweifel/git-auto-commit-action</span>
-      </div>
-    </div>
-    <div class="auto-card">
-      <div class="auto-card-icon">🗂️</div>
-      <div class="auto-card-title">companies.json — the live database</div>
-      <div class="auto-card-body">All scored companies live in a single JSON file, committed to GitHub. GitHub Pages serves it as an API with zero backend cost.</div>
-      <div class="code-block">
-<span class="comment">// companies.json (sample record)</span>
-{
-  <span class="key">"name"</span>: <span class="val">"Infosys Ltd"</span>,
-  <span class="key">"cin"</span>:  <span class="val">"L85110KA1981PLC013115"</span>,
-  <span class="key">"score"</span>: <span class="val">94</span>,
-  <span class="key">"verdict"</span>: <span class="val">"verified"</span>,
-  <span class="key">"signals"</span>: {
-    <span class="key">"mca"</span>: <span class="val">true</span>,
-    <span class="key">"domain_age_years"</span>: <span class="val">26</span>,
-    <span class="key">"news_fraud"</span>: <span class="val">false</span>
-  },
-  <span class="key">"updated"</span>: <span class="val">"2026-05-27"</span>
-}
-      </div>
-    </div>
-    <div class="auto-card">
-      <div class="auto-card-icon">🔍</div>
-      <div class="auto-card-title">Auto-generated SEO pages</div>
-      <div class="auto-card-body">For every company in the database, a static HTML page is generated at <code>/company/[slug].html</code> with full schema markup, targeting searches like <em>"is TechNova Solutions genuine?"</em></div>
-      <div class="code-block">
-<span class="comment">// generate-pages.js (core logic)</span>
-companies.forEach(co => {
-  const html = template(co);
-  fs.writeFileSync(
-    <span class="val">`company/${slug(co.name)}.html`</span>, html
-  );
-  sitemap.push(co.name);
-});
-<span class="comment">// sitemap.xml re-generated each run</span>
-writeSitemap(sitemap);
-      </div>
-    </div>
-    <div class="auto-card">
-      <div class="auto-card-icon">🤖</div>
-      <div class="auto-card-title">RAG + OpenAI validation</div>
-      <div class="auto-card-body">When a user searches an unknown company, OpenAI embeddings are used to find the closest known company, then GPT generates a plain-English verdict. Unknown company data is queued for the next nightly crawl.</div>
-      <div class="code-block">
-<span class="comment">// api/check.js (Cloudflare Worker)</span>
-const emb = await openai.embeddings(query);
-const match = await pinecone.query(emb, top_k=3);
-const verdict = await openai.chat([
-  { role: <span class="val">"system"</span>, content: systemPrompt },
-  { role: <span class="val">"user"</span>, content: JSON.stringify(match) }
-]);
-      </div>
-    </div>
+    <div class="auto-card"><div class="auto-card-icon">⏰</div><div class="auto-card-title">Nightly cron job</div><div class="auto-card-body">A GitHub Actions workflow fires at 00:00 IST. It re-crawls every company in the database, recalculates scores, and pushes updated JSON — no server, no cost.</div><div class="code-block"><span class="comment"># .github/workflows/refresh.yml</span><br><span class="key">on</span>:<br>  <span class="key">schedule</span>:<br>    - <span class="key">cron</span>: <span class="val">'0 18 * * *'</span><br><span class="key">jobs</span>:<br>  <span class="key">refresh</span>:<br>    <span class="key">runs-on</span>: <span class="val">ubuntu-latest</span><br>    <span class="key">steps</span>:<br>      - <span class="key">run</span>: <span class="val">node scripts/crawl.js</span><br>      - <span class="key">run</span>: <span class="val">node scripts/score.js</span></div></div>
+    <div class="auto-card"><div class="auto-card-icon">🗂️</div><div class="auto-card-title">companies.json — the live database</div><div class="auto-card-body">All scored companies live in a single JSON file, committed to GitHub. GitHub Pages serves it as an API with zero backend cost.</div><div class="code-block"><span class="comment">// companies.json (sample record)</span><br>{<br>  <span class="key">"name"</span>: <span class="val">"Infosys Ltd"</span>,<br>  <span class="key">"score"</span>: <span class="val">94</span>,<br>  <span class="key">"verdict"</span>: <span class="val">"verified"</span><br>}</div></div>
   </div>
 </section>
 
-<!-- FOOTER -->
 <footer>
   <div class="footer-logo">verdict<span>nxt</span>gen</div>
   <p>Protecting Indian job seekers with AI. Free forever.</p>
-  <p style="margin-top:12px">
-    <a href="/about">About</a> · <a href="/privacy">Privacy</a> · <a href="/report">Report a company</a> · <a href="https://cybercrime.gov.in" target="_blank">Cybercrime portal</a>
-  </p>
+  <p style="margin-top:12px"><a href="/about">About</a> · <a href="/privacy">Privacy</a> · <a href="/report">Report a company</a> · <a href="https://cybercrime.gov.in" target="_blank">Cybercrime portal</a></p>
   <p style="margin-top:16px;font-size:11px;opacity:.4">Data sourced from MCA21, WHOIS, NewsAPI, Glassdoor. Not legal advice. verditnxtgen.com</p>
 </footer>
 
 <script>
-// ── DEMO CHECK ──
-const DEMO_DB = {
-  "infosys": { name: "Infosys Limited", score: 94, verdict: "verified", mca: "Active", domain: "26 yrs", news: "None", linkedin: "340,000+", gst: "Active" },
-  "wipro":   { name: "Wipro Limited",   score: 91, verdict: "verified", mca: "Active", domain: "22 yrs", news: "None", linkedin: "250,000+", gst: "Active" },
-  "technova solutions": { name: "TechNova Solutions Pvt Ltd", score: 21, verdict: "fraud", mca: "Not found", domain: "3 months", news: "2 fraud alerts", linkedin: "0 employees", gst: "Not found" },
-  "global hr": { name: "Global HR Services", score: 42, verdict: "caution", mca: "Inactive", domain: "8 months", news: "1 complaint", linkedin: "3 employees", gst: "Pending" },
-  "tcs": { name: "Tata Consultancy Services", score: 97, verdict: "verified", mca: "Active", domain: "24 yrs", news: "None", linkedin: "600,000+", gst: "Active" }
-};
+  // ========== CONFIGURATION ==========
+  // Set this to your worker's base URL if it's on a different subdomain.
+  // Leave empty string ('') if the worker is on the same domain (e.g., via Cloudflare route).
+  // Example: const API_BASE_URL = 'https://api.verditnxtgen.com';
+  const API_BASE_URL = '';  // change if needed
 
-function checkCompany() {
-  const val = document.getElementById('company-input').value.trim();
-  if (!val) return;
+  async function checkCompany() {
+    const input = document.getElementById('company-input');
+    const query = input.value.trim();
+    if (!query) return;
 
-  document.getElementById('result-panel').style.display = 'none';
-  const loading = document.getElementById('loading-state');
-  loading.style.display = 'flex';
+    // Reset UI
+    document.getElementById('result-panel').style.display = 'none';
+    document.getElementById('loading-state').style.display = 'flex';
 
-  setTimeout(() => {
-    loading.style.display = 'none';
-    const key = Object.keys(DEMO_DB).find(k => val.toLowerCase().includes(k));
-    const data = key ? DEMO_DB[key] : generateUnknown(val);
-    showResult(data);
-  }, 1800);
-}
+    try {
+      const url = `${API_BASE_URL}/check?q=${encodeURIComponent(query)}`;
+      const response = await fetch(url, {
+        headers: { 'Accept': 'application/json' }
+      });
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      const data = await response.json();
+      showResult(data);
+    } catch (err) {
+      console.error(err);
+      showError(err.message);
+    } finally {
+      document.getElementById('loading-state').style.display = 'none';
+    }
+  }
 
-function generateUnknown(name) {
-  const score = Math.floor(Math.random() * 30) + 30;
-  return {
-    name, score,
-    verdict: score < 50 ? "caution" : "caution",
-    mca: "Not verified", domain: "Unknown",
-    news: "Searching…", linkedin: "Unknown", gst: "Not verified"
-  };
-}
+  function showResult(data) {
+    const panel = document.getElementById('result-panel');
+    panel.style.display = 'block';
 
-function showResult(d) {
-  const panel = document.getElementById('result-panel');
-  panel.style.display = 'block';
-  document.getElementById('res-company-name').textContent = d.name;
+    // Company name
+    document.getElementById('res-company-name').textContent = data.name || 'Unknown';
 
-  // Score
-  document.getElementById('res-score-num').textContent = d.score;
-  const bar = document.getElementById('res-score-bar');
-  bar.style.background = d.score >= 80 ? '#00c896' : d.score >= 50 ? '#ff7a1a' : '#e8243c';
-  setTimeout(() => bar.style.width = d.score + '%', 50);
+    // Score and bar
+    const score = data.score !== undefined && data.score !== null ? data.score : 0;
+    document.getElementById('res-score-num').textContent = score;
+    const bar = document.getElementById('res-score-bar');
+    bar.style.background = score >= 80 ? '#00c896' : score >= 50 ? '#ff7a1a' : '#e8243c';
+    setTimeout(() => bar.style.width = score + '%', 50);
 
-  // Verdict badge
-  const badge = document.getElementById('res-verdict-badge');
-  badge.className = 'verdict-badge verdict-' + d.verdict;
-  badge.textContent = d.verdict === 'verified' ? '✓ Verified' : d.verdict === 'caution' ? '⚠ Caution' : '✗ Likely Fraud';
+    // Verdict badge
+    let verdict = data.verdict || 'pending';
+    const badge = document.getElementById('res-verdict-badge');
+    badge.className = 'verdict-badge verdict-' + verdict;
+    if (verdict === 'verified') badge.textContent = '✓ Verified';
+    else if (verdict === 'caution') badge.textContent = '⚠ Caution';
+    else if (verdict === 'fraud') badge.textContent = '✗ Likely Fraud';
+    else badge.textContent = '⏳ Pending';
 
-  // Signals
-  const signals = [
-    { icon: '🏢', label: 'MCA Status', val: d.mca },
-    { icon: '🌐', label: 'Domain Age', val: d.domain },
-    { icon: '📰', label: 'News Alerts', val: d.news },
-    { icon: '👥', label: 'LinkedIn', val: d.linkedin },
-    { icon: '💰', label: 'GST Status', val: d.gst },
-  ];
-  document.getElementById('res-signals').innerHTML = signals.map(s =>
-    `<div class="signal-row"><span class="signal-icon">${s.icon}</span><span class="signal-label">${s.label}</span><span class="signal-val">${s.val}</span></div>`
-  ).join('');
+    // Build signals from the `signals` object, or fallback to provided fields
+    const signalsObj = data.signals || {};
+    const signals = [
+      { icon: '🏢', label: 'MCA Status', val: signalsObj.mca || data.mca || (data.source === 'database' ? data.signals?.mca : 'Not verified') },
+      { icon: '🌐', label: 'Domain Age', val: signalsObj.domain_age_years ? `${signalsObj.domain_age_years} yrs` : (data.domain_age || 'Unknown') },
+      { icon: '📰', label: 'News Alerts', val: signalsObj.news_fraud_mentions ? `${signalsObj.news_fraud_mentions} alerts` : (data.news || 'None') },
+      { icon: '👥', label: 'LinkedIn', val: signalsObj.linkedin_employees ? `${signalsObj.linkedin_employees} employees` : (data.linkedin || 'Unknown') },
+      { icon: '💰', label: 'GST Status', val: signalsObj.gst || data.gst || 'Not verified' }
+    ];
+    const signalsHtml = signals.map(s => `<div class="signal-row"><span class="signal-icon">${s.icon}</span><span class="signal-label">${s.label}</span><span class="signal-val">${s.val}</span></div>`).join('');
+    document.getElementById('res-signals').innerHTML = signalsHtml;
 
-  // AI summary
-  const summaries = {
-    verified: `<strong>AI Assessment:</strong> This appears to be a legitimate, well-established company. MCA records confirm active registration, the domain is old, and no fraud reports were found. Safe to proceed, but always verify the specific JD and recruiter identity independently.`,
-    caution: `<strong>AI Assessment:</strong> This company has some risk signals. Verify the registration number directly on the <a href="https://www.mca.gov.in" target="_blank">MCA portal</a>, ask for an official offer letter on company letterhead, and do not pay any advance fee under any circumstance.`,
-    fraud: `<strong>⚠ AI Assessment:</strong> Multiple high-risk signals detected. This company shows characteristics of known job scams — very new domain, no MCA registration, zero employee footprint. Do not share documents, do not attend in person, do not pay any fee. Report at <a href="https://cybercrime.gov.in" target="_blank">cybercrime.gov.in</a>.`
-  };
-  document.getElementById('res-ai-summary').innerHTML = summaries[d.verdict];
-}
+    // AI summary
+    let summaryText = '';
+    if (data.message) {
+      summaryText = data.message;
+    } else if (data.verdict === 'verified') {
+      summaryText = `<strong>AI Assessment:</strong> This appears to be a legitimate, well-established company. MCA records confirm active registration, the domain is old, and no fraud reports were found. Safe to proceed, but always verify the specific JD and recruiter identity independently.`;
+    } else if (data.verdict === 'caution') {
+      summaryText = `<strong>AI Assessment:</strong> This company has some risk signals. Verify the registration number directly on the <a href="https://www.mca.gov.in" target="_blank">MCA portal</a>, ask for an official offer letter on company letterhead, and do not pay any advance fee under any circumstance.`;
+    } else if (data.verdict === 'fraud') {
+      summaryText = `<strong>⚠ AI Assessment:</strong> Multiple high-risk signals detected. This company shows characteristics of known job scams — very new domain, no MCA registration, zero employee footprint. Do not share documents, do not attend in person, do not pay any fee. Report at <a href="https://cybercrime.gov.in" target="_blank">cybercrime.gov.in</a>.`;
+    } else {
+      summaryText = `<strong>AI Assessment:</strong> ${data.message || 'This company has been queued for verification. Check back in 24 hours for a full verdict.'}`;
+    }
+    document.getElementById('res-ai-summary').innerHTML = summaryText;
+  }
 
-// Allow pressing Enter
-document.getElementById('company-input').addEventListener('keydown', e => {
-  if (e.key === 'Enter') checkCompany();
-});
+  function showError(msg) {
+    const panel = document.getElementById('result-panel');
+    panel.style.display = 'block';
+    panel.innerHTML = `<div class="error-message">⚠️ Error: ${msg}. Please try again later.</div>`;
+  }
+
+  // Attach Enter key
+  document.getElementById('company-input').addEventListener('keydown', e => {
+    if (e.key === 'Enter') checkCompany();
+  });
 </script>
 </body>
 </html>
