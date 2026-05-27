@@ -18,45 +18,27 @@ jobs:
         with:
           node-version: '20'
 
-      # 🔥 Fix 1: Ensure JSON files are non‑empty and valid
+      - name: Install jq (JSON processor)
+        run: sudo apt-get update && sudo apt-get install -y jq
+
       - name: Validate and repair JSON files
         run: |
-          # Install jq for JSON validation (optional but recommended)
-          sudo apt-get update && sudo apt-get install -y jq
-
-          # Function to reset a JSON file to []
           reset_json() {
             echo "[]" > "$1"
             echo "⚠️ Reset $1 to []"
           }
-
-          # Process companies.json
-          if [ ! -f data/companies.json ]; then
-            reset_json data/companies.json
-          else
-            if ! jq empty data/companies.json 2>/dev/null; then
-              echo "❌ Invalid JSON in companies.json – resetting"
-              reset_json data/companies.json
-            elif [ ! -s data/companies.json ]; then
-              echo "⚠️ companies.json is empty – resetting"
-              reset_json data/companies.json
+          for file in data/companies.json data/queue.json; do
+            if [ ! -f "$file" ]; then
+              reset_json "$file"
+            elif ! jq empty "$file" 2>/dev/null; then
+              echo "❌ Invalid JSON in $file – resetting"
+              reset_json "$file"
+            elif [ ! -s "$file" ]; then
+              echo "⚠️ $file is empty – resetting"
+              reset_json "$file"
             fi
-          fi
+          done
 
-          # Process queue.json
-          if [ ! -f data/queue.json ]; then
-            reset_json data/queue.json
-          else
-            if ! jq empty data/queue.json 2>/dev/null; then
-              echo "❌ Invalid JSON in queue.json – resetting"
-              reset_json data/queue.json
-            elif [ ! -s data/queue.json ]; then
-              echo "⚠️ queue.json is empty – resetting"
-              reset_json data/queue.json
-            fi
-          fi
-
-      # 🔥 Fix 2: Skip npm ci if no package.json – just run scripts directly
       - name: Run score.js
         env:
           NEWS_API_KEY: ${{ secrets.NEWS_API_KEY }}
@@ -68,9 +50,12 @@ jobs:
         run: node scripts/crawl.js
 
       - name: Commit and push updates
+        env:
+          GITHUB_TOKEN: ${{ secrets.VERDITNXTGEN_TOKEN }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+          git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}
           git add data/
           git diff --quiet && git diff --staged --quiet || git commit -m "Auto-update company data [skip ci]"
           git push
