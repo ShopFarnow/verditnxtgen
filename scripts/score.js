@@ -79,12 +79,43 @@ function scoreCompany(existing, raw) {
 }
 
 function main() {
-  const companies = JSON.parse(fs.readFileSync(COMPANIES_FILE, 'utf8'));
+  // 🔥 SAFE READ: companies.json – fallback to [] if empty or invalid
+  let companies = [];
+  try {
+    const raw = fs.readFileSync(COMPANIES_FILE, 'utf8');
+    if (raw.trim()) {
+      companies = JSON.parse(raw);
+      if (!Array.isArray(companies)) {
+        console.warn('⚠️ companies.json is not an array – resetting to []');
+        companies = [];
+      }
+    } else {
+      console.warn('⚠️ companies.json is empty – starting with []');
+      companies = [];
+    }
+  } catch (err) {
+    console.error('❌ Failed to parse companies.json:', err.message);
+    console.warn('⚠️ Starting with empty company list []');
+    companies = [];
+  }
+
+  // If no companies, just write empty array back and exit
+  if (companies.length === 0) {
+    fs.writeFileSync(OUTPUT_FILE, JSON.stringify([], null, 2));
+    console.log('✅ No companies to score – wrote empty companies.json');
+    return;
+  }
+
   const results = companies.map(company => {
     const rawPath = path.join(RAW_DIR, `${company.slug}.json`);
-    const raw = fs.existsSync(rawPath)
-      ? JSON.parse(fs.readFileSync(rawPath, 'utf8'))
-      : {};
+    let raw = {};
+    if (fs.existsSync(rawPath)) {
+      try {
+        raw = JSON.parse(fs.readFileSync(rawPath, 'utf8'));
+      } catch (err) {
+        console.error(`Failed to parse raw data for ${company.slug}:`, err.message);
+      }
+    }
     return scoreCompany(company, raw);
   });
 
