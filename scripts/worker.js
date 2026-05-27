@@ -159,7 +159,7 @@ async function queueNewCompany(name, env) {
     // Read current queue file from GitHub
     const queueUrl = `https://api.github.com/repos/${env.GITHUB_REPO}/contents/data/queue.json`;
     const headers = {
-      'Authorization': `Bearer ${env.GITHUB_TOKEN}`,
+      'Authorization': `Bearer ${env.VERDITNXTGEN_TOKEN}`,
       'Accept': 'application/vnd.github+json',
       'X-GitHub-Api-Version': '2022-11-28',
     };
