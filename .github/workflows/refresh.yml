@@ -23,9 +23,6 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Install dependencies
-        run: npm install
-
       - name: Crawl MCA21 + WHOIS + News
         env:
           NEWS_API_KEY:     ${{ secrets.NEWS_API_KEY }}
