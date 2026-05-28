@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Privacy Policy — VerdictNxtGen</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
+<style>
+:root{--accent:#ff3c00;--ink:#1a1a2e;--ink2:#5a5a72;--border:rgba(26,26,46,0.1);--cream:#f2f0ea}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:#fafaf7;color:var(--ink);line-height:1.7}
+nav{background:rgba(250,250,247,.95);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:0 5%;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.logo{font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--ink);text-decoration:none}.logo span{color:var(--accent)}
+.wrap{max-width:760px;margin:0 auto;padding:60px 5%}
+h1{font-family:'Bebas Neue',sans-serif;font-size:48px;letter-spacing:1px;margin-bottom:8px}
+.updated{font-size:13px;color:var(--ink2);margin-bottom:40px}
+h2{font-size:20px;font-weight:700;margin:36px 0 12px;color:var(--ink)}
+p,li{font-size:15px;color:var(--ink2);margin-bottom:12px}
+ul{padding-left:20px;margin-bottom:16px}
+a{color:#1a3cff}
+.highlight{background:var(--cream);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;padding:16px 20px;margin:20px 0;font-size:14px}
+</style>
+</head>
+<body>
+<nav><a href="/" class="logo">VERDICT<span>.</span>NXTGEN</a><a href="/" style="font-size:13px;color:var(--ink2);text-decoration:none">← Back</a></nav>
+<div class="wrap">
+<h1>PRIVACY POLICY</h1>
+<div class="updated">Last updated: 27 May 2026 · Effective: 27 May 2026</div>
+
+<div class="highlight">
+<strong>Summary:</strong> We collect the company names you search, your IP address, and (if you register) your email. We do not sell your data. Searches are stored to improve our database. You can request deletion at any time by emailing hello@verditnxtgen.com.
+</div>
+
+<h2>1. Who We Are</h2>
+<p>VerdictNxtGen ("we", "our", "the service") is an AI-powered company verification tool accessible at verditnxtgen.com. We are operated by ShopFarnow. For privacy matters, contact: <a href="mailto:hello@verditnxtgen.com">hello@verditnxtgen.com</a>.</p>
+
+<h2>2. What Data We Collect</h2>
+<ul>
+  <li><strong>Search queries:</strong> The company names you type into the search box. These are stored in our GitHub-hosted database to improve future results for all users.</li>
+  <li><strong>IP address:</strong> Used for rate limiting (free tier: 10 requests/day per IP). Not stored permanently.</li>
+  <li><strong>API key email:</strong> If you register for an API key, we store your email address and tier level in Cloudflare KV.</li>
+  <li><strong>Usage data:</strong> Number of API calls per day per key (resets daily). Used for billing and abuse prevention.</li>
+  <li><strong>No account data:</strong> We do not currently have user accounts. We do not store passwords, names, phone numbers, or payment details.</li>
+</ul>
+
+<h2>3. What We Do NOT Collect</h2>
+<ul>
+  <li>We do not collect any data about the job seeker themselves (not your name, resume, or employment history)</li>
+  <li>We do not use tracking pixels, third-party advertising SDKs, or behavioural analytics</li>
+  <li>We do not sell, rent, or share your data with advertisers</li>
+  <li>We do not use cookies beyond what GitHub Pages and Cloudflare set automatically</li>
+</ul>
+
+<h2>4. How We Use Your Data</h2>
+<ul>
+  <li><strong>Search queries</strong> are stored to build a cached company database, reducing API costs and improving response speed for future users</li>
+  <li><strong>IP addresses</strong> are used solely for rate limiting and abuse prevention, then discarded</li>
+  <li><strong>Email addresses</strong> (API key holders) are used to communicate about your API key, tier upgrades, and service announcements. You may opt out at any time.</li>
+</ul>
+
+<h2>5. Compliance with DPDP Act 2023 (India)</h2>
+<p>We comply with the Digital Personal Data Protection Act, 2023 (India). Specifically:</p>
+<ul>
+  <li><strong>Purpose limitation:</strong> Data collected only for fraud detection and service improvement</li>
+  <li><strong>Data minimisation:</strong> We collect only what is necessary</li>
+  <li><strong>Right to erasure:</strong> Email hello@verditnxtgen.com to request deletion of any data we hold about you</li>
+  <li><strong>Data localisation:</strong> Our Cloudflare KV data may be stored globally on Cloudflare's network. GitHub data is stored per GitHub's data residency policies.</li>
+  <li><strong>Grievance officer:</strong> For DPDP-related complaints, contact hello@verditnxtgen.com. We will respond within 72 hours.</li>
+</ul>
+
+<h2>6. Third-Party Services</h2>
+<p>We send your search query to the following third-party APIs to generate results:</p>
+<ul>
+  <li><strong>Wikipedia API</strong> — wikimedia.org — no personal data sent, only company name</li>
+  <li><strong>OpenCorporates API</strong> — opencorporates.com — company name only</li>
+  <li><strong>WHOIS/RDAP</strong> — who-dat.as93.net, rdap.verisign.com — domain name derived from company name only</li>
+  <li><strong>GNews / NewsAPI</strong> — company name only</li>
+  <li><strong>OpenAI API</strong> — company name and data signals sent to generate the AI summary. OpenAI's data retention policy applies.</li>
+  <li><strong>Cloudflare</strong> — hosts our Worker. Cloudflare may log request metadata per their privacy policy.</li>
+  <li><strong>GitHub</strong> — our companies.json cache is stored on GitHub. GitHub's privacy policy applies.</li>
+</ul>
+<p>No personally identifiable information (PII) about the user is sent to any third party.</p>
+
+<h2>7. Data Retention</h2>
+<ul>
+  <li>Search query cache (companies.json): retained indefinitely to improve the service. Contains only company names and scores — no user identifiers.</li>
+  <li>API key data: retained until you request deletion</li>
+  <li>Daily usage counters: deleted automatically at midnight UTC</li>
+  <li>IP rate limit data: deleted automatically at midnight UTC</li>
+</ul>
+
+<h2>8. Your Rights</h2>
+<p>You have the right to: access data we hold about you · request correction · request deletion · withdraw consent at any time.</p>
+<p>To exercise any right: <a href="mailto:hello@verditnxtgen.com">hello@verditnxtgen.com</a>. We respond within 72 hours.</p>
+
+<h2>9. Security</h2>
+<p>API keys are stored as hashed values. All communication is over HTTPS. We do not store payment information (payments handled by Razorpay when implemented). GitHub repository access is restricted to authorised personnel only.</p>
+
+<h2>10. Changes to This Policy</h2>
+<p>We will update this page and change the "Last updated" date for any material changes. Continued use of the service constitutes acceptance.</p>
+
+<h2>11. Contact</h2>
+<p>Privacy questions: <a href="mailto:hello@verditnxtgen.com">hello@verditnxtgen.com</a></p>
+</div>
+</body>
+</html>
