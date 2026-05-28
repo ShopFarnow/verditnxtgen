@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VerdictNxtGen API Documentation</title>
+<meta name="description" content="REST API for company fraud verification. Free tier available. Enterprise plans for HR teams.">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--black:#0a0a0f;--white:#fafaf7;--cream:#f2f0ea;--accent:#ff3c00;--green:#00d68f;--blue:#1a3cff;--ink:#1a1a2e;--ink2:#5a5a72;--ink3:#9a9ab0;--border:rgba(26,26,46,0.1);--r:10px}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:var(--white);color:var(--ink);line-height:1.6}
+nav{position:sticky;top:0;z-index:100;background:rgba(250,250,247,.95);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:0 5%;height:60px;display:flex;align-items:center;justify-content:space-between}
+.nav-logo{font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--ink);text-decoration:none}.nav-logo span{color:var(--accent)}
+.layout{display:grid;grid-template-columns:240px 1fr;min-height:calc(100vh - 60px)}
+.sidebar{background:var(--cream);border-right:1px solid var(--border);padding:32px 20px;position:sticky;top:60px;height:calc(100vh - 60px);overflow-y:auto}
+.sidebar h3{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--ink3);margin:24px 0 8px}
+.sidebar h3:first-child{margin-top:0}
+.sidebar a{display:block;font-size:13px;color:var(--ink2);text-decoration:none;padding:5px 10px;border-radius:6px;transition:all .2s;margin-bottom:2px}
+.sidebar a:hover,.sidebar a.active{background:var(--white);color:var(--ink);font-weight:500}
+.sidebar .method{display:inline-block;font-size:10px;font-weight:700;padding:2px 6px;border-radius:4px;margin-right:4px;font-family:'DM Mono',monospace}
+.get{background:#e8f5e9;color:#1b5e20}.post{background:#e3f2fd;color:#0d47a1}
+.content{padding:48px 60px;max-width:900px}
+.content h1{font-family:'Bebas Neue',sans-serif;font-size:52px;letter-spacing:1px;line-height:1;margin-bottom:12px}
+.content h2{font-family:'Bebas Neue',sans-serif;font-size:32px;letter-spacing:.5px;margin:56px 0 16px;padding-top:56px;border-top:1px solid var(--border);color:var(--ink)}
+.content h3{font-size:16px;font-weight:600;margin:28px 0 10px}
+.content p{font-size:15px;color:var(--ink2);margin-bottom:16px;line-height:1.75}
+.content ul{padding-left:20px;margin-bottom:16px}
+.content li{font-size:15px;color:var(--ink2);margin-bottom:6px;line-height:1.7}
+.badge{display:inline-block;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;margin-right:6px}
+.badge.free{background:#e8f5e9;color:#1b5e20}
+.badge.pro{background:#fff3e0;color:#e65100}
+.badge.ent{background:#e8eaf6;color:#283593}
+.endpoint-card{border:1.5px solid var(--border);border-radius:var(--r);margin-bottom:28px;overflow:hidden}
+.endpoint-header{display:flex;align-items:center;gap:12px;padding:14px 20px;background:var(--cream);border-bottom:1px solid var(--border)}
+.endpoint-method{font-family:'DM Mono',monospace;font-size:12px;font-weight:700;padding:4px 10px;border-radius:6px}
+.endpoint-path{font-family:'DM Mono',monospace;font-size:14px;font-weight:500}
+.endpoint-desc{font-size:13px;color:var(--ink3);margin-left:auto}
+.endpoint-body{padding:20px}
+.param-table{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:16px}
+.param-table th{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:var(--ink3);font-weight:600;padding:8px 12px;border-bottom:2px solid var(--border)}
+.param-table td{padding:8px 12px;border-bottom:1px solid var(--border);color:var(--ink2);vertical-align:top}
+.param-table td:first-child{font-family:'DM Mono',monospace;font-size:12px;color:var(--ink);font-weight:500}
+.param-table td:last-child{color:var(--ink3)}
+.required{color:var(--accent);font-size:10px;font-weight:700;margin-left:4px}
+pre{background:var(--black);color:#a8e6cf;border-radius:var(--r);padding:20px;overflow-x:auto;margin-bottom:16px;font-family:'DM Mono',monospace;font-size:13px;line-height:1.7}
+pre .comment{color:#4a4a6a}
+pre .key{color:#82b4ff}
+pre .str{color:#ffcb6b}
+pre .num{color:#f78c6c}
+pre .bool{color:#c3e88d}
+.tier-table{width:100%;border-collapse:collapse;font-size:14px;margin:20px 0}
+.tier-table th{text-align:left;padding:12px 16px;background:var(--cream);font-size:12px;text-transform:uppercase;letter-spacing:.5px;color:var(--ink3);font-weight:700}
+.tier-table td{padding:12px 16px;border-bottom:1px solid var(--border);color:var(--ink2)}
+.tier-table td:first-child{font-weight:600;color:var(--ink)}
+.yes{color:var(--green);font-weight:700}
+.no{color:var(--ink3)}
+.try-it{background:var(--blue);color:#fff;border:none;border-radius:var(--r);padding:10px 20px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;margin-top:8px}
+.try-it:hover{background:var(--accent)}
+.try-input{width:100%;font-family:'DM Mono',monospace;font-size:13px;border:1.5px solid var(--border);border-radius:8px;padding:10px 14px;background:var(--cream);color:var(--ink);outline:none;margin-bottom:8px}
+.try-input:focus{border-color:var(--blue)}
+.try-result{background:var(--black);color:#a8e6cf;border-radius:var(--r);padding:16px;font-family:'DM Mono',monospace;font-size:12px;line-height:1.7;margin-top:12px;display:none;white-space:pre-wrap;max-height:400px;overflow-y:auto}
+.key-gen-box{background:var(--cream);border:1.5px solid var(--border);border-radius:var(--r);padding:24px;margin:20px 0}
+.key-gen-box input{width:100%;font-family:'DM Sans',sans-serif;font-size:14px;border:1.5px solid var(--border);border-radius:8px;padding:10px 14px;background:#fff;color:var(--ink);outline:none;margin-bottom:10px}
+.key-gen-box input:focus{border-color:var(--blue)}
+.key-result{background:var(--black);color:var(--green);border-radius:8px;padding:14px;font-family:'DM Mono',monospace;font-size:13px;display:none;margin-top:10px;word-break:break-all}
+@media(max-width:768px){.layout{grid-template-columns:1fr}.sidebar{display:none}.content{padding:32px 5%}}
+</style>
+</head>
+<body>
+<nav>
+  <a href="/" class="nav-logo">VERDICT<span>.</span>NXTGEN</a>
+  <a href="/" style="font-size:13px;color:var(--ink2);text-decoration:none">← Back to app</a>
+</nav>
+
+<div class="layout">
+  <aside class="sidebar">
+    <h3>Getting Started</h3>
+    <a href="#overview" class="active">Overview</a>
+    <a href="#auth">Authentication</a>
+    <a href="#limits">Rate Limits</a>
+    <a href="#errors">Error Codes</a>
+
+    <h3>Endpoints</h3>
+    <a href="#check"><span class="method get">GET</span>/check</a>
+    <a href="#batch"><span class="method post">POST</span>/batch</a>
+    <a href="#usage"><span class="method get">GET</span>/usage</a>
+    <a href="#health"><span class="method get">GET</span>/health</a>
+    <a href="#register"><span class="method post">POST</span>/keys/register</a>
+
+    <h3>Reference</h3>
+    <a href="#response">Response Schema</a>
+    <a href="#signals">Signal Definitions</a>
+    <a href="#scoring">Scoring Model</a>
+    <a href="#tiers">Plans & Tiers</a>
+    <a href="#sdks">SDKs & Examples</a>
+  </aside>
+
+  <main class="content">
+    <h1>API DOCS</h1>
+    <p style="font-size:17px;color:var(--ink2)">REST API for real-time company fraud verification. Verify any company in under 5 seconds using live data from Wikipedia, OpenCorporates, WHOIS, and NewsAPI.</p>
+    <p><strong>Base URL:</strong> <code style="background:var(--cream);padding:2px 8px;border-radius:4px;font-family:'DM Mono',monospace">https://verdict-worker.shopfarnow.workers.dev</code></p>
+
+    <!-- OVERVIEW -->
+    <h2 id="overview">OVERVIEW</h2>
+    <p>The VerdictNxtGen API returns a <strong>trust score (0–100)</strong>, a <strong>verdict</strong> (verified / caution / fraud), detected <strong>red flags</strong>, and a <strong>GPT-4o-mini generated summary</strong> for any company name.</p>
+    <p>All responses are JSON. All endpoints support CORS. HTTPS only.</p>
+
+    <!-- AUTH -->
+    <h2 id="auth">AUTHENTICATION</h2>
+    <p>Pass your API key as an HTTP header or query parameter.</p>
+    <pre><span class="comment"># Header (recommended)</span>
+X-API-Key: vng_p_your_api_key_here
+
+<span class="comment"># Query param (for simple integrations)</span>
+GET /check?q=Infosys&api_key=vng_p_your_api_key_here</pre>
+    <p><strong>No key?</strong> The API works without a key but is limited to <strong>10 requests/day per IP</strong> (free tier).</p>
+
+    <div class="key-gen-box">
+      <h3 style="margin:0 0 12px">Generate a Free API Key</h3>
+      <input type="email" id="kg-email" placeholder="your@email.com">
+      <select id="kg-plan" style="width:100%;font-family:'DM Sans',sans-serif;font-size:14px;border:1.5px solid var(--border);border-radius:8px;padding:10px 14px;background:#fff;margin-bottom:10px;outline:none">
+        <option value="free">Free — 10 req/day</option>
+        <option value="pro">Pro — 500 req/day (₹499/mo)</option>
+        <option value="enterprise">Enterprise — unlimited (custom)</option>
+      </select>
+      <button class="try-it" onclick="generateKey()">Generate API Key →</button>
+      <div class="key-result" id="key-result"></div>
+    </div>
+
+    <!-- RATE LIMITS -->
+    <h2 id="limits">RATE LIMITS</h2>
+    <table class="tier-table">
+      <tr><th>Tier</th><th>Daily Limit</th><th>Batch</th><th>White-label</th><th>Price</th></tr>
+      <tr><td>Free (no key)</td><td>10 req/day per IP</td><td class="no">—</td><td class="no">—</td><td>Free</td></tr>
+      <tr><td>Free (with key)</td><td>10 req/day</td><td class="no">—</td><td class="no">—</td><td>Free</td></tr>
+      <tr><td>Pro</td><td>500 req/day</td><td>20 companies</td><td class="no">—</td><td>₹499/mo</td></tr>
+      <tr><td>Enterprise</td><td>Unlimited</td><td>100 companies</td><td class="yes">✓</td><td>Custom</td></tr>
+    </table>
+    <p>Rate limit resets at <strong>midnight UTC</strong> daily. On limit exceeded, the API returns HTTP 429 with a <code>retry_after</code> field.</p>
+
+    <!-- ERRORS -->
+    <h2 id="errors">ERROR CODES</h2>
+    <table class="param-table">
+      <tr><th>Status</th><th>Code</th><th>Meaning</th></tr>
+      <tr><td>400</td><td>bad_request</td><td>Query missing or too short (&lt;2 chars)</td></tr>
+      <tr><td>401</td><td>unauthorized</td><td>Invalid or missing API key</td></tr>
+      <tr><td>403</td><td>forbidden</td><td>Endpoint not available on your tier (e.g. batch on free)</td></tr>
+      <tr><td>429</td><td>rate_limited</td><td>Daily quota exceeded. Check /usage for details.</td></tr>
+      <tr><td>500</td><td>server_error</td><td>Unexpected error. Check /health for status.</td></tr>
+    </table>
+
+    <!-- /check -->
+    <h2 id="check">GET /check</h2>
+    <div class="endpoint-card">
+      <div class="endpoint-header">
+        <span class="endpoint-method get">GET</span>
+        <span class="endpoint-path">/check</span>
+        <span class="endpoint-desc"><span class="badge free">Free</span><span class="badge pro">Pro</span><span class="badge ent">Enterprise</span></span>
+      </div>
+      <div class="endpoint-body">
+        <p>Verify a single company. Returns trust score, verdict, signals, red flags, and AI summary.</p>
+        <h3>Query Parameters</h3>
+        <table class="param-table">
+          <tr><th>Param</th><th>Type</th><th>Required</th><th>Description</th></tr>
+          <tr><td>q<span class="required">*</span></td><td>string</td><td>Yes</td><td>Company name, CIN number, or website domain</td></tr>
+          <tr><td>api_key</td><td>string</td><td>No</td><td>Your API key (or use X-API-Key header)</td></tr>
+        </table>
+        <h3>Try It</h3>
+        <input class="try-input" id="check-q" value="Infosys" placeholder="Company name…">
+        <button class="try-it" onclick="tryCheck()">Send Request →</button>
+        <div class="try-result" id="check-result"></div>
+        <h3 style="margin-top:20px">Example Request</h3>
+<pre>curl -X GET \
+  "https://verdict-worker.shopfarnow.workers.dev/check?q=Infosys" \
+  -H "X-API-Key: vng_p_your_key_here"</pre>
+        <h3>Example Response</h3>
+<pre>{
+  <span class="key">"found"</span>: <span class="bool">true</span>,
+  <span class="key">"source"</span>: <span class="str">"live"</span>,
+  <span class="key">"name"</span>: <span class="str">"Infosys"</span>,
+  <span class="key">"score"</span>: <span class="num">91</span>,
+  <span class="key">"verdict"</span>: <span class="str">"verified"</span>,
+  <span class="key">"flags"</span>: [],
+  <span class="key">"signals"</span>: {
+    <span class="key">"wikipedia_exists"</span>: <span class="bool">true</span>,
+    <span class="key">"mca"</span>: <span class="str">"Active"</span>,
+    <span class="key">"domain_age_years"</span>: <span class="num">26.4</span>,
+    <span class="key">"founded_year"</span>: <span class="num">1981</span>,
+    <span class="key">"linkedin_employees"</span>: <span class="num">317240</span>,
+    <span class="key">"headquarters"</span>: <span class="str">"Bengaluru, Karnataka, India"</span>,
+    <span class="key">"news_fraud_mentions"</span>: <span class="num">0</span>
+  },
+  <span class="key">"summary"</span>: <span class="str">"Infosys is a well-established, publicly listed IT company founded in 1981. Your recruiter's email should come from @infosys.com — never @infosys-careers.in or similar. Never pay any fee for interviews or onboarding."</span>,
+  <span class="key">"data_sources"</span>: {
+    <span class="key">"wikipedia"</span>: <span class="str">"ok"</span>,
+    <span class="key">"opencorporates"</span>: <span class="str">"ok"</span>,
+    <span class="key">"whois"</span>: <span class="str">"ok"</span>,
+    <span class="key">"news"</span>: <span class="str">"ok"</span>
+  },
+  <span class="key">"updated"</span>: <span class="str">"2026-05-27"</span>
+}</pre>
+      </div>
+    </div>
+
+    <!-- /batch -->
+    <h2 id="batch">POST /batch</h2>
+    <div class="endpoint-card">
+      <div class="endpoint-header">
+        <span class="endpoint-method post">POST</span>
+        <span class="endpoint-path">/batch</span>
+        <span class="endpoint-desc"><span class="badge pro">Pro</span><span class="badge ent">Enterprise</span></span>
+      </div>
+      <div class="endpoint-body">
+        <p>Verify multiple companies in one request. Pro: up to 20. Enterprise: up to 100. Results run in parallel — typically under 6 seconds for 20 companies.</p>
+        <h3>Request Body</h3>
+<pre>{
+  <span class="key">"companies"</span>: [
+    <span class="str">"Infosys"</span>,
+    <span class="str">"TechNova Solutions Pvt Ltd"</span>,
+    <span class="str">"Wipro Limited"</span>
+  ]
+}</pre>
+        <h3>Example Request</h3>
+<pre>curl -X POST \
+  "https://verdict-worker.shopfarnow.workers.dev/batch" \
+  -H "X-API-Key: vng_p_your_key_here" \
+  -H "Content-Type: application/json" \
+  -d '{"companies":["Infosys","TechNova Solutions Pvt Ltd"]}'</pre>
+        <h3>Example Response</h3>
+<pre>{
+  <span class="key">"total"</span>: <span class="num">2</span>,
+  <span class="key">"summary"</span>: { <span class="key">"verified"</span>: <span class="num">1</span>, <span class="key">"caution"</span>: <span class="num">0</span>, <span class="key">"fraud"</span>: <span class="num">1</span> },
+  <span class="key">"results"</span>: [
+    { <span class="key">"name"</span>: <span class="str">"Infosys"</span>, <span class="key">"score"</span>: <span class="num">91</span>, <span class="key">"verdict"</span>: <span class="str">"verified"</span>, ... },
+    { <span class="key">"name"</span>: <span class="str">"TechNova Solutions Pvt Ltd"</span>, <span class="key">"score"</span>: <span class="num">12</span>, <span class="key">"verdict"</span>: <span class="str">"fraud"</span>, ... }
+  ]
+}</pre>
+      </div>
+    </div>
+
+    <!-- /usage -->
+    <h2 id="usage">GET /usage</h2>
+    <div class="endpoint-card">
+      <div class="endpoint-header">
+        <span class="endpoint-method get">GET</span>
+        <span class="endpoint-path">/usage</span>
+        <span class="endpoint-desc"><span class="badge free">Free</span><span class="badge pro">Pro</span><span class="badge ent">Enterprise</span></span>
+      </div>
+      <div class="endpoint-body">
+        <p>Check your current daily usage and remaining quota.</p>
+<pre>curl "https://verdict-worker.shopfarnow.workers.dev/usage" \
+  -H "X-API-Key: vng_p_your_key_here"</pre>
+<pre>{
+  <span class="key">"tier"</span>: <span class="str">"pro"</span>,
+  <span class="key">"used"</span>: <span class="num">47</span>,
+  <span class="key">"limit"</span>: <span class="num">500</span>,
+  <span class="key">"remaining"</span>: <span class="num">453</span>,
+  <span class="key">"reset"</span>: <span class="str">"midnight UTC"</span>
+}</pre>
+      </div>
+    </div>
+
+    <!-- /health -->
+    <h2 id="health">GET /health</h2>
+    <div class="endpoint-card">
+      <div class="endpoint-header">
+        <span class="endpoint-method get">GET</span>
+        <span class="endpoint-path">/health</span>
+        <span class="endpoint-desc">Public — no key required</span>
+      </div>
+      <div class="endpoint-body">
+        <p>Live status of all upstream data sources. Use this for uptime monitoring.</p>
+        <button class="try-it" onclick="tryHealth()">Check Status Now →</button>
+        <div class="try-result" id="health-result"></div>
+      </div>
+    </div>
+
+    <!-- RESPONSE SCHEMA -->
+    <h2 id="response">RESPONSE SCHEMA</h2>
+    <table class="param-table">
+      <tr><th>Field</th><th>Type</th><th>Description</th></tr>
+      <tr><td>found</td><td>boolean</td><td>Always true for /check (live lookup always returns a result)</td></tr>
+      <tr><td>name</td><td>string</td><td>Resolved company name (may differ from input if fuzzy matched)</td></tr>
+      <tr><td>score</td><td>integer</td><td>Trust score 0–100</td></tr>
+      <tr><td>verdict</td><td>string</td><td>"verified" (≥75) · "caution" (45–74) · "fraud" (&lt;45)</td></tr>
+      <tr><td>flags</td><td>string[]</td><td>List of detected risk signals in plain English</td></tr>
+      <tr><td>signals</td><td>object</td><td>Raw data from all sources (see Signal Definitions)</td></tr>
+      <tr><td>summary</td><td>string</td><td>GPT-4o-mini generated 2–3 sentence verdict</td></tr>
+      <tr><td>data_sources</td><td>object</td><td>"ok" or "miss" for each source</td></tr>
+      <tr><td>source</td><td>string</td><td>"live", "kv_cache", or "cache+live"</td></tr>
+      <tr><td>updated</td><td>string</td><td>ISO date of this result</td></tr>
+    </table>
+
+    <!-- SIGNALS -->
+    <h2 id="signals">SIGNAL DEFINITIONS</h2>
+    <table class="param-table">
+      <tr><th>Signal</th><th>Source</th><th>Description</th></tr>
+      <tr><td>wikipedia_exists</td><td>Wikipedia API</td><td>Boolean — does a Wikipedia page exist for this company?</td></tr>
+      <tr><td>mca</td><td>OpenCorporates</td><td>"Active", "Inactive", "Not verified"</td></tr>
+      <tr><td>company_number</td><td>OpenCorporates</td><td>CIN / registration number</td></tr>
+      <tr><td>jurisdiction</td><td>OpenCorporates</td><td>Country code, e.g. "in" for India</td></tr>
+      <tr><td>incorporation_date</td><td>OpenCorporates</td><td>Date of company incorporation</td></tr>
+      <tr><td>domain_age_years</td><td>WHOIS/RDAP</td><td>Age of primary domain in years</td></tr>
+      <tr><td>founded_year</td><td>Wikipedia / OpenCorp</td><td>Year company was founded</td></tr>
+      <tr><td>linkedin_employees</td><td>Wikipedia infobox</td><td>Employee count from Wikipedia</td></tr>
+      <tr><td>headquarters</td><td>Wikipedia infobox</td><td>HQ location string</td></tr>
+      <tr><td>news_fraud_mentions</td><td>GNews / NewsAPI</td><td>Raw count of fraud-related articles</td></tr>
+      <tr><td>news_fraud_weighted</td><td>GNews / NewsAPI</td><td>Recency-weighted fraud score (recent = 2x weight)</td></tr>
+    </table>
+
+    <!-- SCORING -->
+    <h2 id="scoring">SCORING MODEL</h2>
+    <p>Base score: <strong>30</strong>. Maximum: <strong>100</strong>. Minimum: <strong>0</strong>.</p>
+    <table class="param-table">
+      <tr><th>Signal</th><th>Points</th><th>Notes</th></tr>
+      <tr><td>Wikipedia page exists</td><td style="color:var(--green)">+25</td><td>Strong proxy for legitimacy</td></tr>
+      <tr><td>Company registered (OpenCorp)</td><td style="color:var(--green)">+20</td><td>Active status in any jurisdiction</td></tr>
+      <tr><td>Domain age ≥15 years</td><td style="color:var(--green)">+15</td><td>Scaled: +13 (10yr), +10 (5yr), +7 (2yr), +4 (1yr)</td></tr>
+      <tr><td>Employees ≥100,000</td><td style="color:var(--green)">+10</td><td>Scaled: +8 (10k), +6 (1k), +4 (100), +2 (10)</td></tr>
+      <tr><td>Founded ≥30 years ago</td><td style="color:var(--green)">+8</td><td>Scaled: +7 (20yr), +5 (10yr), +3 (5yr)</td></tr>
+      <tr><td>No Wikipedia page</td><td style="color:var(--accent)">−5</td><td>Absence is a weak negative signal</td></tr>
+      <tr><td>Domain &lt;6 months old</td><td style="color:var(--accent)">−15</td><td>New domains with job ads = major red flag</td></tr>
+      <tr><td>Fraud news (weighted &gt;10)</td><td style="color:var(--accent)">−40</td><td>Recency-weighted: articles &lt;3 months count 2x</td></tr>
+      <tr><td>Suspicious domain pattern</td><td style="color:var(--accent)">−15</td><td>e.g. "accenture-careers.xyz" mimicking real brands</td></tr>
+    </table>
+
+    <!-- TIERS -->
+    <h2 id="tiers">PLANS & TIERS</h2>
+    <p>To upgrade from Free to Pro, email <a href="mailto:hello@verditnxtgen.com">hello@verditnxtgen.com</a> with your API key. Razorpay payment integration coming soon.</p>
+
+    <!-- SDKs -->
+    <h2 id="sdks">SDKS & EXAMPLES</h2>
+    <h3>JavaScript / Node.js</h3>
+<pre><span class="comment">// npm install node-fetch  (or use native fetch in Node 18+)</span>
+const res = await fetch(
+  'https://verdict-worker.shopfarnow.workers.dev/check?q=Infosys',
+  { headers: { 'X-API-Key': 'vng_p_your_key' } }
+);
+const { name, score, verdict, summary } = await res.json();
+console.log(`${name}: ${score}/100 — ${verdict}`);</pre>
+
+    <h3>Python</h3>
+<pre><span class="comment"># pip install requests</span>
+import requests
+r = requests.get(
+    'https://verdict-worker.shopfarnow.workers.dev/check',
+    params={'q': 'Infosys'},
+    headers={'X-API-Key': 'vng_p_your_key'}
+)
+data = r.json()
+print(f"{data['name']}: {data['score']}/100 — {data['verdict']}")</pre>
+
+    <h3>Embed Widget (iframe)</h3>
+<pre><span class="comment">&lt;!-- Add to any webpage — no API key needed for embed --&gt;</span>
+&lt;iframe
+  src="https://verditnxtgen.com/widget.html"
+  width="100%"
+  height="500"
+  frameborder="0"
+  style="border-radius:12px"
+&gt;&lt;/iframe&gt;</pre>
+
+    <p style="margin-top:48px;padding-top:24px;border-top:1px solid var(--border);font-size:13px;color:var(--ink3)">
+      Questions? Email <a href="mailto:hello@verditnxtgen.com" style="color:var(--blue)">hello@verditnxtgen.com</a> ·
+      <a href="/privacy.html" style="color:var(--blue)">Privacy Policy</a> ·
+      <a href="/terms.html" style="color:var(--blue)">Terms of Service</a>
+    </p>
+  </main>
+</div>
+
+<script>
+const BASE = 'https://verdict-worker.shopfarnow.workers.dev';
+
+async function tryCheck() {
+  const q = document.getElementById('check-q').value.trim();
+  const el = document.getElementById('check-result');
+  el.style.display = 'block';
+  el.textContent = 'Fetching…';
+  try {
+    const r = await fetch(`${BASE}/check?q=${encodeURIComponent(q)}`);
+    const d = await r.json();
+    el.textContent = JSON.stringify(d, null, 2);
+  } catch(e) { el.textContent = 'Error: ' + e.message; }
+}
+
+async function tryHealth() {
+  const el = document.getElementById('health-result');
+  el.style.display = 'block';
+  el.textContent = 'Checking…';
+  try {
+    const r = await fetch(`${BASE}/health`);
+    const d = await r.json();
+    el.textContent = JSON.stringify(d, null, 2);
+  } catch(e) { el.textContent = 'Error: ' + e.message; }
+}
+
+async function generateKey() {
+  const email = document.getElementById('kg-email').value.trim();
+  const plan  = document.getElementById('kg-plan').value;
+  const el    = document.getElementById('key-result');
+  if (!email || !email.includes('@')) { alert('Please enter a valid email'); return; }
+  el.style.display = 'block';
+  el.textContent = 'Generating…';
+  try {
+    const r = await fetch(`${BASE}/keys/register`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, plan })
+    });
+    const d = await r.json();
+    el.textContent = JSON.stringify(d, null, 2);
+  } catch(e) { el.textContent = 'Error: ' + e.message; }
+}
+
+// Highlight active sidebar link on scroll
+const sections = document.querySelectorAll('h2[id]');
+const links = document.querySelectorAll('.sidebar a');
+window.addEventListener('scroll', () => {
+  let current = '';
+  sections.forEach(s => { if (window.scrollY >= s.offsetTop - 100) current = s.id; });
+  links.forEach(l => { l.classList.toggle('active', l.getAttribute('href') === '#' + current); });
+});
+</script>
+</body>
+</html>
